@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=armel
+      - MONGO_INITDB_ROOT_PASSWORD=root
+
+  client:
+    build:
+      context: ./client # Chemin vers le dossier du client
+      dockerfile: Dockerfile # Nom du Dockerfile du client
+    container_name: client
+    ports:
+      - "3001:3001" # Port pour le client React
+
+  server:
+    build:
+      context: ./server # Chemin vers le dossier du serveur
+      dockerfile: Dockerfile # Nom du Dockerfile du serveur
+    container_name: server
+    ports:
+      - "3000:3000" # Port pour le serveur Node.js
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=armel
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    depends_on:
+      - mongodb # Dépend du service MongoDB
+
+volumes:
+  mongodb_data:
