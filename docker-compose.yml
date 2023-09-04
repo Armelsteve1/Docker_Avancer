@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest # Utilisez l'image officielle MongoDB depuis Docker Hub
+    container_name: mongodb 
+    ports:
+      - "27017:27017" # Port de MongoDB
+    volumes:
+      - mongodb_data:/data/db # Montez un volume pour stocker les données de MongoDB de manière persistante
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=armel # Nom d'utilisateur de l'administrateur
+      - MONGO_INITDB_ROOT_PASSWORD=root # Mot de passe de l'administrateur
+volumes:
+  mongodb_data: # Définition du volume pour les données de MongoDB
