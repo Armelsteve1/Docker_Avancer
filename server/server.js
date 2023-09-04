@@ -4,21 +4,11 @@ const { connectToDatabase } = require("./db");
 
 const PORT = process.env.PORT || 3000;
 
-// Middleware pour gérer les données JSON
 app.use(express.json());
 
-connectToDatabase()
-  .then(() => {
-    // Démarrez le serveur une fois la connexion à la base de données établie
-    app.listen(PORT, () => {
-      console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Erreur de connexion à la base de données:", error);
-  });
+const apiRouter = express.Router();
 
-app.get("/users", async (req, res) => {
+apiRouter.get("/users", async (req, res) => {
   try {
     const db = getDatabase();
     const users = await db.collection("users").find({}).toArray();
@@ -29,6 +19,12 @@ app.get("/users", async (req, res) => {
   }
 });
 
+apiRouter.get("/connexion-reussie", (req, res) => {
+  res.json({ message: "Connexion réussie à MongoDB Atlas" });
+});
+
+app.use("/api", apiRouter);
+
 app.use((req, res) => {
   res.status(404).send("Page non trouvée");
 });
@@ -37,5 +33,15 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Erreur serveur");
 });
+
+connectToDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Erreur de connexion à la base de données:", error);
+  });
 
 module.exports = app;
