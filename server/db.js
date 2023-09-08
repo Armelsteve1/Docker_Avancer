@@ -11,7 +11,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-let db; 
+let db;
 
 async function connectToDatabase() {
   try {

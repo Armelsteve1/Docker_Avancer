@@ -23,7 +23,7 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # Définissez une variable d'environnement pour le port
-ENV PORT=3000
+ENV PORT=4000
 
 # Exposez le port configuré
 EXPOSE $PORT

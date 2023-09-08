@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
-const { connectToDatabase } = require("./db");
+const { connectToDatabase, getLogs } = require("./db"); // Assurez-vous d'avoir une fonction getLogs dans votre fichier db.js
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
 
@@ -21,6 +21,12 @@ apiRouter.get("/users", async (req, res) => {
 
 apiRouter.get("/connexion-reussie", (req, res) => {
   res.json({ message: "Connexion réussie à MongoDB Atlas" });
+  console.log("Connexion réussie à MongoDB Atlas");
+});
+
+apiRouter.get("/logs", (req, res) => {
+  const logs = getLogs();
+  res.json({ logs });
 });
 
 app.use("/api", apiRouter);

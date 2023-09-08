@@ -1,36 +1,49 @@
 version: '3.8'
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
+  mongodb: # Service MongoDB
+    image: mongo:latest # Utilisation de l'image Docker MongoDB la plus récente
+    container_name: mongodb # Nom du conteneur
     ports:
-      - "27017:27017"
+      - "27017:27017" # Mappage du port 27017 de l'hôte au port 27017 du conteneur
     volumes:
-      - mongodb_data:/data/db
+      - mongodb_data:/data/db # Montage d'un volume pour stocker les données MongoDB
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=armel
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME} # Utilisation des variables d'environnement pour le nom d'utilisateur
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD} # Utilisation des variables d'environnement pour le mot de passe
+    networks:
+      - mynetwork # Utilisation d'un réseau personnalisé
 
-  client:
+  client: # Service Client
     build:
-      context: ./client # Chemin vers le dossier du client
+      context: ./client # Chemin vers le dossier client
       dockerfile: Dockerfile # Nom du Dockerfile du client
-    container_name: client
+    container_name: client # Nom du conteneur
     ports:
-      - "3001:3001" # Port pour le client React
+      - "3000:3000" # Mappage du port 3000 de l'hôte au port 3000 du conteneur
+    networks:
+      - mynetwork # Utilisation du même réseau personnalisé
 
-  server:
+  server: # Service Server
     build:
-      context: ./server # Chemin vers le dossier du serveur
+      context: ./server # Chemin vers le dossier serveur
       dockerfile: Dockerfile # Nom du Dockerfile du serveur
-    container_name: server
+    container_name: server # Nom du conteneur
     ports:
-      - "3000:3000" # Port pour le serveur Node.js
+      - "4000:4000" # Mappage du port 4000 de l'hôte au port 4000 du conteneur
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=armel
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME} # Utilisation des variables d'environnement pour le nom d'utilisateur
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD} # Utilisation des variables d'environnement pour le mot de passe
     depends_on:
       - mongodb # Dépend du service MongoDB
+    networks:
+      - mynetwork # Utilisation du même réseau personnalisé
+
+networks:
+  mynetwork: # Définition du réseau personnalisé
 
 volumes:
-  mongodb_data:
+  mongodb_data: # Définition du volume pour stocker les données MongoDB
+  # trois autre volume à crée
+
+  # ngnix
+  # elasticsearch 

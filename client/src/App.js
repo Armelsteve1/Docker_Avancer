@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    fetch("/connexion-reussie")
+    fetch("/logs")
       .then((response) => {
-        console.log(response, "reponse serveur");
         if (!response.ok) {
           throw new Error("La requête a échoué.");
         }
         return response.json();
       })
       .then((data) => {
-        setMessage(data.message);
+        setLogs(data.logs);
       })
       .catch((error) => {
-        console.error(
-          "Erreur lors de la récupération du message de connexion :",
-          error
-        );
+        console.error("Erreur lors de la récupération des logs :", error);
       });
   }, []);
 
   return (
     <div className="App">
-      <h1>TP Docker Avancé </h1>
-      <p>{message}</p>
+      <h1>TP Docker Avancé</h1>
+      <h2>Logs du serveur :</h2>
+      <ul>
+        {logs.map((log, index) => (
+          <li key={index}>{log}</li>
+        ))}
+      </ul>
     </div>
   );
 }
